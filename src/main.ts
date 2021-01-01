@@ -9,6 +9,7 @@ async function bootstrap() {
       .setTitle('Real World Application')
       .setDescription('API description')
       .setVersion('1.0.0')
+      .addBearerAuth()
       .addTag('audit-logs')
       .addTag('auth')
       .addTag('organizations')
