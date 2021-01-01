@@ -9,11 +9,17 @@ async function bootstrap() {
       .setTitle('Real World Application')
       .setDescription('API description')
       .setVersion('1.0.0')
-      .addTag('myTag')
+      .addTag('audit-logs')
+      .addTag('auth')
+      .addTag('organizations')
+      .addTag('teams')
+      .addTag('users')
       .build();
-  const document = SwaggerModule.createDocument(app, options);
+  const document = SwaggerModule.createDocument(app, options, {
+    include: [],
+  });
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
