@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import * as argon2 from 'argon2';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../users/user.entity';
+import { User } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

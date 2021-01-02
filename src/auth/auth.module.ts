@@ -8,7 +8,7 @@ import { AuthController } from './auth.controller';
 import { config } from '../common/config/config';
 import { JwtStrategy } from './jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../users/user.entity';
+import { User } from '../users/entities/user.entity';
 
 @Module({
     imports: [

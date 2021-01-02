@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { Repository, Like } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
-import { UserDto } from './user-dto';
-import { UserChangePasswordDto } from './user-change-password-dto';
+import { User } from './entities/user.entity';
+import { UserDto } from './dto/user-dto';
+import { UserChangePasswordDto } from './dto/user-change-password-dto';
 import * as argon2 from 'argon2';
 
 @Injectable()

@@ -4,9 +4,9 @@ import { ApiTags, ApiOkResponse, ApiInternalServerErrorResponse, ApiNotFoundResp
     ApiUnauthorizedResponse,
     ApiBearerAuth} from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { User } from './user.entity';
-import { UserDto } from './user-dto';
-import { UserChangePasswordDto } from './user-change-password-dto';
+import { User } from './entities/user.entity';
+import { UserDto } from './dto/user-dto';
+import { UserChangePasswordDto } from './dto/user-change-password-dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
