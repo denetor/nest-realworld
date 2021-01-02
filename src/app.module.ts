@@ -6,6 +6,7 @@ import { config } from './common/config/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { TeamsModule } from './teams/teams.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
       AuthModule,
       UsersModule,
       OrganizationsModule,
+      TeamsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
