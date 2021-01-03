@@ -27,7 +27,7 @@ import {
     ApiBadRequestResponse,
     ApiForbiddenResponse,
     ApiUnauthorizedResponse,
-    ApiBearerAuth
+    ApiBearerAuth, ApiOperation
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
@@ -45,6 +45,8 @@ export class UsersController {
     @ApiBearerAuth()
     @ApiOkResponse({ description: 'Entity found' })
     @ApiInternalServerErrorResponse({ description: 'Some error occurred' })
+    @ApiOperation({ summary: 'Get all items' })
+    //@ApiResponse({ status: 200, description: 'Return all articles.'})
     async findAll(): Promise<User[] | InternalServerErrorException> {
         return await this.entitiesService.findAll();
     }
@@ -55,6 +57,7 @@ export class UsersController {
     @UsePipes(new ValidationPipe({ transform: true }))
     @ApiOkResponse({ description: 'Entity found' })
     @ApiUnauthorizedResponse({ description: 'Not authenticated' })
+    @ApiOperation({ summary: 'Get details of the currently authenticated user' })
     async findMyself(@Request() req): Promise<User | UnauthorizedException> {
         return await this.entitiesService.findMyself(req);
     }
@@ -64,6 +67,7 @@ export class UsersController {
     @ApiBearerAuth()
     @ApiOkResponse({ description: 'Entity found' })
     @ApiNotFoundResponse({ description: 'Entity not found' })
+    @ApiOperation({ summary: 'Get an items' })
     async findOne(@Param('id') id: number): Promise<User | NotFoundException> {
         return await this.entitiesService.findOne(id);
     }
@@ -74,6 +78,7 @@ export class UsersController {
     @ApiParam({ name: 'email', description: 'User email' })
     @ApiOkResponse({ description: 'Entity found' })
     @ApiNotFoundResponse({ description: 'Entity not found' })
+    @ApiOperation({ summary: 'Get a user given the email' })
     async findOneByEmail(
         @Param('email') email: string
     ): Promise<User | NotFoundException> {
@@ -84,6 +89,7 @@ export class UsersController {
     @ApiParam({ name: 'token', description: 'Reset password token' })
     @ApiOkResponse({ description: 'Entity found' })
     @ApiNotFoundResponse({ description: 'Entity not found' })
+    @ApiOperation({ summary: 'Get a user given his password reset token' })
     async findOneByResetPasswordToken(
         @Param('token') token: string
     ): Promise<User | NotFoundException> {
@@ -102,6 +108,7 @@ export class UsersController {
         description: 'Internal server error performing request'
     })
     @ApiBadRequestResponse({ description: 'At least 2 characters needed to perform search' })
+    @ApiOperation({ summary: 'Get all users matching part of name, lastName or email' })
     async findBySearchText(
         @Param('searchText') searchText: string
     ): Promise<User[] | BadRequestException | InternalServerErrorException> {
@@ -121,6 +128,7 @@ export class UsersController {
     @ApiNotFoundResponse({
         description: 'Entity created, but failed to read it'
     })
+    @ApiOperation({ summary: 'Create a new item' })
     async insert(
         @Body() entity: UserDto,
         @Request() req
@@ -225,6 +233,7 @@ export class UsersController {
     })
     @ApiForbiddenResponse({ description: 'Old password does not match' })
     @ApiUnauthorizedResponse({ description: 'User not logged in' })
+    @ApiOperation({ summary: 'Sets a new pasword' })
     async changePassword(
         @Body() entity: UserChangePasswordDto,
         @Request() req
@@ -241,6 +250,7 @@ export class UsersController {
     @ApiOkResponse({ description: 'Entity changed' })
     @ApiInternalServerErrorResponse({ description: 'Error saving entity' })
     @ApiNotFoundResponse({ description: 'Entity not found' })
+    @ApiOperation({ summary: 'Updates an item given its id' })
     async updateById(
         @Param('id') id: number,
         @Body() entity: UserDto,
@@ -257,6 +267,7 @@ export class UsersController {
     @ApiOkResponse({ description: 'Entity changed' })
     @ApiInternalServerErrorResponse({ description: 'Error saving entity' })
     @ApiNotFoundResponse({ description: 'Entity not found' })
+    @ApiOperation({ summary: 'Delete an item' })
     async delete(
         @Param('id') id: number,
         @Request() req

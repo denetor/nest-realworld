@@ -10,9 +10,9 @@ Access rights can be set to single users, organizations or teams.
 - [x] Authentication API protection
 - [x] Controller decorators (ValidationPipe, parameters and response codes)
 - [x] Fix all controllers response codes
+- [ ] Tests (https://stackoverflow.com/questions/55366037/inject-typeorm-repository-into-nestjs-service-for-mock-data-testing)
 - [ ] Logger
 - [ ] Access control
-- [ ] Tests
 - [ ] REST API Audit (with configuration)
 - [ ] Data access Audit (with configuration)
 - [ ] Add email notifications on account creation/pasword recovery/... (with configurable sending service)

@@ -1,26 +1,41 @@
-import {Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
+import {
+    Injectable,
+    InternalServerErrorException,
+    NotFoundException
+} from '@nestjs/common';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import {Organization} from "./entities/organization.entity";
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Organization } from './entities/organization.entity';
 
 @Injectable()
 export class OrganizationsService {
-
+    /**
+     *
+     * @param entitiesRepository
+     */
     constructor(
         @InjectRepository(Organization)
-        private readonly entitiesRepository: Repository<Organization>,
-    ) { }
+        private readonly entitiesRepository: Repository<Organization>
+    ) {}
 
-
-    async create(createOrganizationDto: CreateOrganizationDto):
-        Promise<Organization | InternalServerErrorException | NotFoundException> {
+    /**
+     *
+     * @param createOrganizationDto
+     */
+    async create(
+        createOrganizationDto: CreateOrganizationDto
+    ): Promise<
+        Organization | InternalServerErrorException | NotFoundException
+    > {
         const o = new Organization(createOrganizationDto);
         const result = await this.entitiesRepository.insert(o);
         if (result && result.identifiers && result.identifiers.length > 0) {
             // read just created instance
-            const instance = await this.entitiesRepository.findOne(result.identifiers[0].id);
+            const instance = await this.entitiesRepository.findOne(
+                result.identifiers[0].id
+            );
             if (instance) {
                 return instance;
             } else {
@@ -31,6 +46,9 @@ export class OrganizationsService {
         }
     }
 
+    /**
+     *
+     */
     async findAll(): Promise<Organization[] | InternalServerErrorException> {
         const entities = await this.entitiesRepository.find();
         if (entities || Array.isArray(entities)) {
@@ -40,6 +58,10 @@ export class OrganizationsService {
         }
     }
 
+    /**
+     *
+     * @param id
+     */
     async findOne(id: number): Promise<Organization | NotFoundException> {
         const entity = await this.entitiesRepository.findOne(id);
         if (entity) {
@@ -49,8 +71,17 @@ export class OrganizationsService {
         }
     }
 
-    async update(id: number, updateOrganizationDto: UpdateOrganizationDto):
-        Promise<Organization | InternalServerErrorException | NotFoundException> {
+    /**
+     *
+     * @param id
+     * @param updateOrganizationDto
+     */
+    async update(
+        id: number,
+        updateOrganizationDto: UpdateOrganizationDto
+    ): Promise<
+        Organization | InternalServerErrorException | NotFoundException
+    > {
         const entity = await this.entitiesRepository.findOne(id);
         if (entity && updateOrganizationDto) {
             entity.name = updateOrganizationDto.name || entity.name || '';
@@ -70,14 +101,24 @@ export class OrganizationsService {
         }
     }
 
-    async remove(id: number): Promise<Organization | InternalServerErrorException | NotFoundException> {
+    /**
+     *
+     * @param id
+     */
+    async remove(
+        id: number
+    ): Promise<
+        Organization | InternalServerErrorException | NotFoundException
+    > {
         const entity = await this.entitiesRepository.findOne(id);
         if (entity) {
             const result = await this.entitiesRepository.delete(id);
             if (result && result.affected) {
                 return entity;
             } else {
-                throw new InternalServerErrorException({description: 'Error deleting entity'});
+                throw new InternalServerErrorException({
+                    description: 'Error deleting entity'
+                });
             }
         } else {
             throw new NotFoundException();
