@@ -6,7 +6,7 @@ import {
     Put,
     Param,
     Delete,
-    UseGuards
+    UseGuards, UsePipes, ValidationPipe
 } from '@nestjs/common';
 import { OrganizationsService } from './organizations.service';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
@@ -22,6 +22,7 @@ export class OrganizationsController {
     @Post()
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UsePipes(new ValidationPipe({ transform: true }))
     create(@Body() createOrganizationDto: CreateOrganizationDto) {
         return this.organizationsService.create(createOrganizationDto);
     }
@@ -43,6 +44,7 @@ export class OrganizationsController {
     @Put(':id')
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UsePipes(new ValidationPipe({ transform: true }))
     update(
         @Param('id') id: string,
         @Body() updateOrganizationDto: UpdateOrganizationDto

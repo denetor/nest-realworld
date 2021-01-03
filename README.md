@@ -8,7 +8,7 @@ Access rights can be set to single users, organizations or teams.
 
 ## TODO
 - [x] Authentication API protection
-- [ ] Controller decorators (ValidationPipe, parameters and response codes)
+- [x] Controller decorators (ValidationPipe, parameters and response codes)
 - [ ] Access control
 - [ ] REST API Audit
 - [ ] Data access Audit

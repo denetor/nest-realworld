@@ -6,7 +6,7 @@ import {
     Put,
     Param,
     Delete,
-    UseGuards
+    UseGuards, UsePipes, ValidationPipe
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -22,6 +22,7 @@ export class TeamsController {
     @Post()
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UsePipes(new ValidationPipe({ transform: true }))
     create(@Body() createTeamDto: CreateTeamDto) {
         return this.teamsService.create(createTeamDto);
     }
@@ -43,6 +44,7 @@ export class TeamsController {
     @Put(':id')
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
+    @UsePipes(new ValidationPipe({ transform: true }))
     update(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
         return this.teamsService.update(+id, updateTeamDto);
     }
