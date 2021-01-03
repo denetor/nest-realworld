@@ -22,7 +22,7 @@ export class AuthService {
     async validateUser(email: string, password: string): Promise<any> {
         this.logger.debug('AuthService.validateUser()');
         this.logger.debug({email, password});
-        const user = await this.usersService.findOneByEmail(email);
+        const user: any = await this.usersService.findOneByEmail(email);
         this.logger.debug({user});
         if (user && user.password && password) {
             const bufPassword = Buffer.from(password);

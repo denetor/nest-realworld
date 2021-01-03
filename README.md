@@ -9,10 +9,12 @@ Access rights can be set to single users, organizations or teams.
 ## TODO
 - [x] Authentication API protection
 - [x] Controller decorators (ValidationPipe, parameters and response codes)
-- [-] Fix all controllers response codes
-- [ ] Tests
+- [x] Fix all controllers response codes
+- [ ] Logger
 - [ ] Access control
+- [ ] Tests
 - [ ] REST API Audit (with configuration)
 - [ ] Data access Audit (with configuration)
 - [ ] Add email notifications on account creation/pasword recovery/... (with configurable sending service)
 - [ ] Add password expiring (with configuration)
+- [ ] Project entity, with access control
