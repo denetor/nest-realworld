@@ -10,7 +10,7 @@ export class TeamRepositoryMock {
     };
 
     async findOne(id: number): Promise<Team> {
-        return new Team({ name: 'sample team' });
+        return this.sampleEntity;
     }
 
     async findAll(): Promise<Team[]> {

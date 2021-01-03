@@ -10,7 +10,7 @@ export class OrganizationRepositoryMock {
     };
 
     async findOne(id: number): Promise<Organization> {
-        return new Organization({ name: 'ACME' });
+        return this.sampleEntity;
     }
 
     async findAll(): Promise<Organization[]> {

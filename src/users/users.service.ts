@@ -5,7 +5,7 @@ import {
     InternalServerErrorException,
     Logger,
     NotFoundException,
-    UnauthorizedException,
+    UnauthorizedException
 } from '@nestjs/common';
 import { Repository, Like } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,16 +16,13 @@ import * as argon2 from 'argon2';
 
 @Injectable()
 export class UsersService {
-
-
     constructor(
         @InjectRepository(User)
         private readonly entitiesRepository: Repository<User>,
-        private readonly logger: Logger,
-        // private appRolesRepository: Repository<AppRole>,
-        // private mailerService: MailerService,
-    ) {}
-
+        private readonly logger: Logger
+    ) // private appRolesRepository: Repository<AppRole>,
+    // private mailerService: MailerService,
+    {}
 
     async findAll(): Promise<User[] | InternalServerErrorException> {
         const entities = await this.entitiesRepository.find();
@@ -36,13 +33,18 @@ export class UsersService {
         }
     }
 
-
     async findMyself(req): Promise<User | UnauthorizedException> {
         if (req && req.user && req.user.id) {
             return this.entitiesRepository
                 .createQueryBuilder('user')
-                .leftJoinAndSelect('user.userToOrganizations', 'userToOrganizations')
-                .leftJoinAndSelect('userToOrganizations.organization', 'organization')
+                .leftJoinAndSelect(
+                    'user.userToOrganizations',
+                    'userToOrganizations'
+                )
+                .leftJoinAndSelect(
+                    'userToOrganizations.organization',
+                    'organization'
+                )
                 .leftJoinAndSelect('userToOrganizations.role', 'role')
                 .where('user.id = :id', { id: req.user.id })
                 .getOne();
@@ -50,7 +52,6 @@ export class UsersService {
             throw new UnauthorizedException();
         }
     }
-
 
     async findOne(id: number): Promise<User | NotFoundException> {
         const entity = await this.entitiesRepository.findOne(id);
@@ -60,7 +61,6 @@ export class UsersService {
             throw new NotFoundException();
         }
     }
-
 
     async findOneByEmail(email: string): Promise<User | NotFoundException> {
         const entity = await this.entitiesRepository
@@ -74,8 +74,9 @@ export class UsersService {
         }
     }
 
-
-    async findOneByResetPasswordToken(token: string): Promise<User | NotFoundException> {
+    async findOneByResetPasswordToken(
+        token: string
+    ): Promise<User | NotFoundException> {
         const user = await this.entitiesRepository
             .createQueryBuilder('users')
             .where('users.resetPasswordToken = :token', { token })
@@ -90,19 +91,20 @@ export class UsersService {
         }
     }
 
-
     /**
      * Find entities given part of name, lastname or email
      *
      * @param searchText
      */
-    async findBySearchText(searchText: string): Promise<User[] | BadRequestException | InternalServerErrorException> {
+    async findBySearchText(
+        searchText: string
+    ): Promise<User[] | BadRequestException | InternalServerErrorException> {
         searchText = searchText.trim().toLowerCase();
         if (searchText.length >= 2) {
             const whereConditions = [
-                { name: Like('%' + searchText + '%')},
-                { lastName: Like('%' + searchText + '%')},
-                { email: Like('%' + searchText + '%')},
+                { name: Like('%' + searchText + '%') },
+                { lastName: Like('%' + searchText + '%') },
+                { email: Like('%' + searchText + '%') }
             ];
             const entities = await this.entitiesRepository
                 .createQueryBuilder('users')
@@ -114,14 +116,17 @@ export class UsersService {
                 throw new InternalServerErrorException();
             }
         } else {
-            throw new BadRequestException('searchText must be at leas 2 characters');
+            throw new BadRequestException(
+                'searchText must be at leas 2 characters'
+            );
         }
     }
 
-
-    async insert(dto: UserDto): Promise<User | NotFoundException | InternalServerErrorException> {
+    async insert(
+        dto: UserDto
+    ): Promise<User | NotFoundException | InternalServerErrorException> {
         this.logger.debug('UsersService.insert()');
-        this.logger.debug({dto});
+        this.logger.debug({ dto });
         const u = new User();
         u.name = dto.name || '';
         u.lastName = dto.lastName || '';
@@ -130,9 +135,11 @@ export class UsersService {
         u.technicalConsent = dto.technicalConsent || false;
         const result = await this.entitiesRepository.insert(u);
         if (result && result.identifiers && result.identifiers.length > 0) {
-            const entity = await this.entitiesRepository.findOne(result.identifiers[0].id);
+            const entity = await this.entitiesRepository.findOne(
+                result.identifiers[0].id
+            );
             if (entity) {
-                this.logger.debug({entity});
+                this.logger.debug({ entity });
                 return entity;
             } else {
                 this.logger.debug('NotFoundException');
@@ -144,10 +151,12 @@ export class UsersService {
         }
     }
 
-
-    async update(id, dto: UserDto): Promise<User | NotFoundException | InternalServerErrorException> {
+    async update(
+        id,
+        dto: UserDto
+    ): Promise<User | NotFoundException | InternalServerErrorException> {
         this.logger.debug('UsersService.update()');
-        this.logger.debug({id, dto});
+        this.logger.debug({ id, dto });
         // read current entity
         const entity = await this.entitiesRepository.findOne(id);
         if (entity && dto) {
@@ -155,9 +164,15 @@ export class UsersService {
             entity.lastName = dto.lastName || entity.lastName || '';
             entity.email = dto.email || entity.email || '';
             // note: must use this long form or 'false' value seems the field is not filled
-            if (dto.mustChangePassword === true || dto.mustChangePassword === false) {
+            if (
+                dto.mustChangePassword === true ||
+                dto.mustChangePassword === false
+            ) {
                 entity.mustChangePassword = dto.mustChangePassword;
-            } else if (entity.mustChangePassword === true || entity.mustChangePassword === false) {
+            } else if (
+                entity.mustChangePassword === true ||
+                entity.mustChangePassword === false
+            ) {
                 // do nothing, the value remains
             } else {
                 // set false if you have no clue
@@ -167,7 +182,7 @@ export class UsersService {
             if (result) {
                 const instance = this.entitiesRepository.findOne(id);
                 if (instance) {
-                    this.logger.debug({instance});
+                    this.logger.debug({ instance });
                     return instance;
                 } else {
                     this.logger.debug('NotFoundException');
@@ -183,25 +198,27 @@ export class UsersService {
         }
     }
 
-
-    async delete(id: number): Promise<User | InternalServerErrorException | NotFoundException> {
+    async delete(
+        id: number
+    ): Promise<User | InternalServerErrorException | NotFoundException> {
         this.logger.debug('UsersService.delete()');
-        this.logger.debug({id});
+        this.logger.debug({ id });
         const entity = await this.entitiesRepository.findOne(id);
         if (entity) {
             const result = await this.entitiesRepository.delete(id);
             if (result && result.affected) {
-                this.logger.debug({result});
+                this.logger.debug({ result });
                 return entity;
             } else {
-                throw new InternalServerErrorException({description: 'Error deleting entity'});
+                throw new InternalServerErrorException({
+                    description: 'Error deleting entity'
+                });
             }
         } else {
             this.logger.debug('NotFoundException');
             throw new NotFoundException();
         }
     }
-
 
     // /**
     //  * Sets a password recover token for an user and sends him a welcome email with a reset password link
@@ -321,41 +338,58 @@ export class UsersService {
     //     }
     // }
 
-
     /**
      * Change password for currently logged user
      *
      * @param {UserChangePasswordDto} entity
      * @param req
      */
-    async changePassword(entity: UserChangePasswordDto, req):
-        Promise<User | ForbiddenException | NotFoundException | BadRequestException | UnauthorizedException> {
+    async changePassword(
+        entity: UserChangePasswordDto,
+        req
+    ): Promise<
+        | User
+        | ForbiddenException
+        | NotFoundException
+        | BadRequestException
+        | UnauthorizedException
+    > {
         this.logger.debug('UsersService.changePassword()');
         if (req && req.user && req.user.id) {
-            this.logger.debug({id: req.user.id});
+            this.logger.debug({ id: req.user.id });
             if (entity && entity.oldPassword && entity.newPassword) {
                 // load user
                 const user = await this.entitiesRepository.findOne(req.user.id);
                 if (user) {
                     // check if old password matches
                     const bufPassword = Buffer.from(entity.oldPassword);
-                    const check = await argon2.verify(user.password, bufPassword);
+                    const check = await argon2.verify(
+                        user.password,
+                        bufPassword
+                    );
                     if (check) {
                         // change password and reset password flags
                         user.password = await argon2.hash(entity.newPassword);
                         user.resetPasswordToken = null;
                         user.mustChangePassword = false;
-                        const instance = await this.entitiesRepository.save(user);
+                        const instance = await this.entitiesRepository.save(
+                            user
+                        );
                         if (instance) {
                             this.logger.debug('password changed');
                             return instance;
                         } else {
                             this.logger.debug('NotFoundException');
-                            throw new NotFoundException({ description: 'Entity updated, but failed reading it back' });
+                            throw new NotFoundException({
+                                description:
+                                    'Entity updated, but failed reading it back'
+                            });
                         }
                     } else {
                         this.logger.debug('ForbiddenException');
-                        throw new ForbiddenException({ description: 'Old password does not match' });
+                        throw new ForbiddenException({
+                            description: 'Old password does not match'
+                        });
                     }
                 } else {
                     this.logger.debug('NotFoundException');
@@ -363,7 +397,9 @@ export class UsersService {
                 }
             } else {
                 this.logger.debug('BadRequestException');
-                throw new BadRequestException({ description: 'Invalid or missing parameters' });
+                throw new BadRequestException({
+                    description: 'Invalid or missing parameters'
+                });
             }
         } else {
             this.logger.debug('UnauthorizedException');
@@ -371,13 +407,12 @@ export class UsersService {
         }
     }
 
-
     /**
      * Return obfuscated version of email
      *
      * @param email
      */
-    private static obfuscateEmail(email: string) {
+    static obfuscateEmail(email: string) {
         let ret = '';
         const pieces = email.split('@');
         // obfuscate username
@@ -399,8 +434,7 @@ export class UsersService {
         return ret;
     }
 
-
-    private static obfuscateString(s: string) {
+    static obfuscateString(s: string) {
         let ret = '';
         if (s && s.length > 0) {
             ret += s[0] + '...';
@@ -410,6 +444,4 @@ export class UsersService {
         }
         return ret;
     }
-
-
 }
