@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationRepositoryMock } from './mocks/organization-repository.mock';
-import {Organization} from "./entities/organization.entity";
-import {UpdateOrganizationDto} from "./dto/update-organization.dto";
+import { Organization } from './entities/organization.entity';
+import { UpdateOrganizationDto } from './dto/update-organization.dto';
 
 describe('OrganizationsService', () => {
     let service: OrganizationsService;
@@ -26,18 +26,11 @@ describe('OrganizationsService', () => {
     });
 
     it('should have methods defined', () => {
-        expect(service.create).toBeDefined();
         expect(service.findAll).toBeDefined();
         expect(service.findOne).toBeDefined();
+        expect(service.create).toBeDefined();
         expect(service.update).toBeDefined();
         expect(service.remove).toBeDefined();
-    });
-
-    it('create() should return an entity', () => {
-        const dto = new Organization({name: 'ACME'});
-        const instance = service.create(dto).then(entity => {
-            expect(typeof instance).toBe('Organization');
-        });
     });
 
     it('findOne() should return an entity', () => {
@@ -52,8 +45,15 @@ describe('OrganizationsService', () => {
         });
     });
 
+    it('create() should return an entity', () => {
+        const dto = new Organization({ name: 'ACME' });
+        const instance = service.create(dto).then(entity => {
+            expect(typeof instance).toBe('Organization');
+        });
+    });
+
     it('update() should return an entity', () => {
-        const dto: UpdateOrganizationDto = {name: 'ACME'};
+        const dto: UpdateOrganizationDto = { name: 'ACME' };
         service.update(1, dto).then(entity => {
             expect(typeof entity).toBe('Organization');
         });
