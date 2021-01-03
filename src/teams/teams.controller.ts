@@ -6,13 +6,20 @@ import {
     Put,
     Param,
     Delete,
-    UseGuards, UsePipes, ValidationPipe
+    UseGuards, UsePipes, ValidationPipe, InternalServerErrorException, NotFoundException
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBearerAuth,
+    ApiCreatedResponse,
+    ApiInternalServerErrorResponse,
+    ApiNotFoundResponse, ApiOkResponse,
+    ApiTags
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import {Team} from "./entities/team.entity";
 
 @Controller('teams')
 @ApiTags('teams')
@@ -23,21 +30,29 @@ export class TeamsController {
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
     @UsePipes(new ValidationPipe({ transform: true }))
-    create(@Body() createTeamDto: CreateTeamDto) {
+    @ApiCreatedResponse()
+    @ApiNotFoundResponse()
+    @ApiInternalServerErrorResponse()
+    create(@Body() createTeamDto: CreateTeamDto):
+        Promise<Team | InternalServerErrorException | NotFoundException>{
         return this.teamsService.create(createTeamDto);
     }
 
     @Get()
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
-    findAll() {
+    @ApiOkResponse()
+    @ApiInternalServerErrorResponse()
+    findAll(): Promise<Team[] | InternalServerErrorException> {
         return this.teamsService.findAll();
     }
 
     @Get(':id')
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
-    findOne(@Param('id') id: string) {
+    @ApiOkResponse()
+    @ApiNotFoundResponse()
+    findOne(@Param('id') id: string): Promise<Team | NotFoundException> {
         return this.teamsService.findOne(+id);
     }
 
@@ -45,14 +60,21 @@ export class TeamsController {
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
     @UsePipes(new ValidationPipe({ transform: true }))
-    update(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
+    @ApiOkResponse()
+    @ApiNotFoundResponse()
+    @ApiInternalServerErrorResponse()
+    update(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto):
+        Promise<Team | InternalServerErrorException | NotFoundException> {
         return this.teamsService.update(+id, updateTeamDto);
     }
 
     @Delete(':id')
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
-    remove(@Param('id') id: string) {
+    @ApiOkResponse()
+    @ApiNotFoundResponse()
+    @ApiInternalServerErrorResponse()
+    remove(@Param('id') id: string): Promise<Team | NotFoundException> {
         return this.teamsService.remove(+id);
     }
 }

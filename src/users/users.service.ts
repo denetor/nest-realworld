@@ -27,7 +27,7 @@ export class UsersService {
     ) {}
 
 
-    async findAll(): Promise<User[] | undefined> {
+    async findAll(): Promise<User[] | InternalServerErrorException> {
         const entities = await this.entitiesRepository.find();
         if (entities || Array.isArray(entities)) {
             return entities;
@@ -37,7 +37,7 @@ export class UsersService {
     }
 
 
-    findMyself(req) {
+    async findMyself(req): Promise<User | UnauthorizedException> {
         if (req && req.user && req.user.id) {
             return this.entitiesRepository
                 .createQueryBuilder('user')
@@ -52,7 +52,7 @@ export class UsersService {
     }
 
 
-    async findOne(id: number): Promise<User | undefined> {
+    async findOne(id: number): Promise<User | NotFoundException> {
         const entity = await this.entitiesRepository.findOne(id);
         if (entity) {
             return entity;
@@ -62,15 +62,20 @@ export class UsersService {
     }
 
 
-    findOneByEmail(email: string): Promise<User | undefined> {
-        return this.entitiesRepository
+    async findOneByEmail(email: string): Promise<User | NotFoundException> {
+        const entity = await this.entitiesRepository
             .createQueryBuilder('users')
             .where('users.email = :email', { email })
             .getOne();
+        if (entity) {
+            return entity;
+        } else {
+            throw new NotFoundException();
+        }
     }
 
 
-    async findOneByResetPasswordToken(token: string): Promise<User | undefined> {
+    async findOneByResetPasswordToken(token: string): Promise<User | NotFoundException> {
         const user = await this.entitiesRepository
             .createQueryBuilder('users')
             .where('users.resetPasswordToken = :token', { token })
@@ -81,7 +86,7 @@ export class UsersService {
             entity.email = UsersService.obfuscateEmail(user.email);
             return entity;
         } else {
-            return undefined;
+            throw new NotFoundException();
         }
     }
 
@@ -91,7 +96,7 @@ export class UsersService {
      *
      * @param searchText
      */
-    async findBySearchText(searchText: string): Promise<User[] | undefined> {
+    async findBySearchText(searchText: string): Promise<User[] | BadRequestException | InternalServerErrorException> {
         searchText = searchText.trim().toLowerCase();
         if (searchText.length >= 2) {
             const whereConditions = [
@@ -103,7 +108,7 @@ export class UsersService {
                 .createQueryBuilder('users')
                 .where(whereConditions)
                 .getMany();
-            if (entities || Array.isArray(entities)) {
+            if (entities && Array.isArray(entities)) {
                 return entities;
             } else {
                 throw new InternalServerErrorException();
@@ -114,7 +119,7 @@ export class UsersService {
     }
 
 
-    async insert(dto: UserDto) {
+    async insert(dto: UserDto): Promise<User | NotFoundException | InternalServerErrorException> {
         this.logger.debug('UsersService.insert()');
         this.logger.debug({dto});
         const u = new User();
@@ -123,21 +128,6 @@ export class UsersService {
         u.email = dto.email || '';
         u.password = dto.password || '';
         u.technicalConsent = dto.technicalConsent || false;
-        // if (!dto.appRoleId) {
-        //     // default role, in not specified, is user
-        //     const userRole = await this.appRolesRepository.createQueryBuilder('appRole')
-        //         .where('name = :name', { name: 'user'})
-        //         .getOne();
-        //     if (userRole) {
-        //         u.appRole = userRole;
-        //     }
-        // } else {
-        //     // if role id specified, sets that role
-        //     const userRole = await this.appRolesRepository.findOne(dto.appRoleId);
-        //     if (userRole) {
-        //         u.appRole = userRole;
-        //     }
-        // }
         const result = await this.entitiesRepository.insert(u);
         if (result && result.identifiers && result.identifiers.length > 0) {
             const entity = await this.entitiesRepository.findOne(result.identifiers[0].id);
@@ -155,7 +145,7 @@ export class UsersService {
     }
 
 
-    async update(id, dto: UserDto): Promise<User | undefined> {
+    async update(id, dto: UserDto): Promise<User | NotFoundException | InternalServerErrorException> {
         this.logger.debug('UsersService.update()');
         this.logger.debug({id, dto});
         // read current entity
@@ -194,7 +184,7 @@ export class UsersService {
     }
 
 
-    async delete(id: number): Promise<User | undefined> {
+    async delete(id: number): Promise<User | InternalServerErrorException | NotFoundException> {
         this.logger.debug('UsersService.delete()');
         this.logger.debug({id});
         const entity = await this.entitiesRepository.findOne(id);
@@ -338,7 +328,8 @@ export class UsersService {
      * @param {UserChangePasswordDto} entity
      * @param req
      */
-    async changePassword(entity: UserChangePasswordDto, req): Promise<User | undefined> {
+    async changePassword(entity: UserChangePasswordDto, req):
+        Promise<User | ForbiddenException | NotFoundException | BadRequestException | UnauthorizedException> {
         this.logger.debug('UsersService.changePassword()');
         if (req && req.user && req.user.id) {
             this.logger.debug({id: req.user.id});
@@ -362,17 +353,6 @@ export class UsersService {
                             this.logger.debug('NotFoundException');
                             throw new NotFoundException({ description: 'Entity updated, but failed reading it back' });
                         }
-                        // const result = await this.entitiesRepository.save(user);
-                        // if (result && result.identifiers && result.identifiers.length > 0) {
-                        //     const instance = await this.entitiesRepository.findOne(result.identifiers[0].id);
-                        //     if (instance) {
-                        //         return instance;
-                        //     } else {
-                        //         throw new NotFoundException({description: 'Entity updated, but failed reading it back'});
-                        //     }
-                        // } else {
-                        //     throw new InternalServerErrorException({description: 'Failed updating entity'});
-                        // }
                     } else {
                         this.logger.debug('ForbiddenException');
                         throw new ForbiddenException({ description: 'Old password does not match' });
@@ -393,7 +373,6 @@ export class UsersService {
 
 
     /**
-     * Return obfuscated version of email
      * Return obfuscated version of email
      *
      * @param email

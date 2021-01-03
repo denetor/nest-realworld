@@ -9,7 +9,12 @@ import {
     ValidationPipe,
     Request,
     Delete,
-    UseGuards
+    UseGuards,
+    InternalServerErrorException,
+    UnauthorizedException,
+    NotFoundException,
+    BadRequestException,
+    ForbiddenException
 } from '@nestjs/common';
 import {
     ApiTags,
@@ -40,8 +45,8 @@ export class UsersController {
     @ApiBearerAuth()
     @ApiOkResponse({ description: 'Entity found' })
     @ApiInternalServerErrorResponse({ description: 'Some error occurred' })
-    findAll(): Promise<User[] | undefined> {
-        return this.entitiesService.findAll();
+    async findAll(): Promise<User[] | InternalServerErrorException> {
+        return await this.entitiesService.findAll();
     }
 
     @Get('myself')
@@ -50,7 +55,7 @@ export class UsersController {
     @UsePipes(new ValidationPipe({ transform: true }))
     @ApiOkResponse({ description: 'Entity found' })
     @ApiUnauthorizedResponse({ description: 'Not authenticated' })
-    async findMyself(@Request() req): Promise<User | undefined> {
+    async findMyself(@Request() req): Promise<User | UnauthorizedException> {
         return await this.entitiesService.findMyself(req);
     }
 
@@ -59,8 +64,8 @@ export class UsersController {
     @ApiBearerAuth()
     @ApiOkResponse({ description: 'Entity found' })
     @ApiNotFoundResponse({ description: 'Entity not found' })
-    findOne(@Param('id') id: number): Promise<User | undefined> {
-        return this.entitiesService.findOne(id);
+    async findOne(@Param('id') id: number): Promise<User | NotFoundException> {
+        return await this.entitiesService.findOne(id);
     }
 
     @Get('by-email/:email')
@@ -71,7 +76,7 @@ export class UsersController {
     @ApiNotFoundResponse({ description: 'Entity not found' })
     async findOneByEmail(
         @Param('email') email: string
-    ): Promise<User | undefined> {
+    ): Promise<User | NotFoundException> {
         return await this.entitiesService.findOneByEmail(email);
     }
 
@@ -81,7 +86,7 @@ export class UsersController {
     @ApiNotFoundResponse({ description: 'Entity not found' })
     async findOneByResetPasswordToken(
         @Param('token') token: string
-    ): Promise<User | undefined> {
+    ): Promise<User | NotFoundException> {
         return await this.entitiesService.findOneByResetPasswordToken(token);
     }
 
@@ -96,10 +101,10 @@ export class UsersController {
     @ApiInternalServerErrorResponse({
         description: 'Internal server error performing request'
     })
-    @ApiBadRequestResponse({ description: 'Invalid parameters' })
+    @ApiBadRequestResponse({ description: 'At least 2 characters needed to perform search' })
     async findBySearchText(
         @Param('searchText') searchText: string
-    ): Promise<User[] | undefined> {
+    ): Promise<User[] | BadRequestException | InternalServerErrorException> {
         return await this.entitiesService.findBySearchText(searchText);
     }
 
@@ -119,7 +124,7 @@ export class UsersController {
     async insert(
         @Body() entity: UserDto,
         @Request() req
-    ): Promise<User | undefined> {
+    ): Promise<User | NotFoundException | InternalServerErrorException> {
         const ret = await this.entitiesService.insert(entity);
         return ret;
     }
@@ -223,7 +228,7 @@ export class UsersController {
     async changePassword(
         @Body() entity: UserChangePasswordDto,
         @Request() req
-    ): Promise<User | undefined> {
+    ): Promise<User | ForbiddenException | NotFoundException | BadRequestException | UnauthorizedException> {
         const ret = await this.entitiesService.changePassword(entity, req);
         return ret;
     }
@@ -240,8 +245,8 @@ export class UsersController {
         @Param('id') id: number,
         @Body() entity: UserDto,
         @Request() req
-    ): Promise<User | undefined> {
-        const previousValue = await this.entitiesService.findOne(id);
+    ): Promise<User | NotFoundException | InternalServerErrorException> {
+        // const previousValue = await this.entitiesService.findOne(id); // keep this for auditing, when will be done
         const ret = await this.entitiesService.update(id, entity);
         return ret;
     }
@@ -255,7 +260,7 @@ export class UsersController {
     async delete(
         @Param('id') id: number,
         @Request() req
-    ): Promise<User | undefined> {
+    ): Promise<User | InternalServerErrorException | NotFoundException> {
         const entity = await this.entitiesService.delete(id);
         return entity;
     }

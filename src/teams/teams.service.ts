@@ -77,7 +77,7 @@ export class TeamsService {
         }
     }
 
-    async remove(id: number): Promise<Team | undefined> {
+    async remove(id: number): Promise<Team | NotFoundException> {
         const entity = await this.entitiesRepository.findOne(id);
         if (entity) {
             const result = await this.entitiesRepository.delete(id);

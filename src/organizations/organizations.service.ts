@@ -70,7 +70,7 @@ export class OrganizationsService {
         }
     }
 
-    async remove(id: number): Promise<Organization | undefined> {
+    async remove(id: number): Promise<Organization | InternalServerErrorException | NotFoundException> {
         const entity = await this.entitiesRepository.findOne(id);
         if (entity) {
             const result = await this.entitiesRepository.delete(id);
