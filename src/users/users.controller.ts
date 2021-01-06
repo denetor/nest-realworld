@@ -129,11 +129,11 @@ export class UsersController {
         description: 'Entity created, but failed to read it'
     })
     @ApiOperation({ summary: 'Create a new item' })
-    async insert(
+    async create(
         @Body() entity: UserDto,
         @Request() req
     ): Promise<User | NotFoundException | InternalServerErrorException> {
-        const ret = await this.entitiesService.insert(entity);
+        const ret = await this.entitiesService.create(entity);
         return ret;
     }
 
@@ -268,11 +268,11 @@ export class UsersController {
     @ApiInternalServerErrorResponse({ description: 'Error saving entity' })
     @ApiNotFoundResponse({ description: 'Entity not found' })
     @ApiOperation({ summary: 'Delete an item' })
-    async delete(
+    async remove(
         @Param('id') id: number,
         @Request() req
     ): Promise<User | InternalServerErrorException | NotFoundException> {
-        const entity = await this.entitiesService.delete(id);
+        const entity = await this.entitiesService.remove(id);
         return entity;
     }
 }

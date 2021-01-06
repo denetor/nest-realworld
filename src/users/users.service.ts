@@ -122,7 +122,7 @@ export class UsersService {
         }
     }
 
-    async insert(
+    async create(
         dto: UserDto
     ): Promise<User | NotFoundException | InternalServerErrorException> {
         this.logger.debug('UsersService.insert()');
@@ -198,7 +198,7 @@ export class UsersService {
         }
     }
 
-    async delete(
+    async remove(
         id: number
     ): Promise<User | InternalServerErrorException | NotFoundException> {
         this.logger.debug('UsersService.delete()');

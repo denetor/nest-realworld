@@ -47,9 +47,9 @@ describe('UsersService', () => {
         expect(service.findOneByEmail).toBeDefined();
         expect(service.findOneByResetPasswordToken).toBeDefined();
         expect(service.findBySearchText).toBeDefined();
-        expect(service.insert).toBeDefined();
+        expect(service.create).toBeDefined();
         expect(service.update).toBeDefined();
-        expect(service.delete).toBeDefined();
+        expect(service.remove).toBeDefined();
         expect(service.changePassword).toBeDefined();
         expect(UsersService.obfuscateEmail).toBeDefined();
         expect(UsersService.obfuscateString).toBeDefined();
@@ -92,7 +92,7 @@ describe('UsersService', () => {
     });
 
     it('insert() should return an entity', () => {
-        const instance = service.insert(sampleDto).then(entity => {
+        const instance = service.create(sampleDto).then(entity => {
             expect(typeof instance).toBe('User');
         });
     });
@@ -104,7 +104,7 @@ describe('UsersService', () => {
     });
 
     it('delete() should return an entity', () => {
-        service.delete(1).then(entity => {
+        service.remove(1).then(entity => {
             expect(typeof entity).toBe('User');
         });
     });

@@ -20,13 +20,13 @@ export class UsersServiceMock {
     findBySearchText(searchText: string) {
     };
 
-    insert(dto: UserDto) {
+    create(dto: UserDto) {
     };
 
     update(id: number, dto: UserDto) {
     }
 
-    delete(id: number) {
+    remove(id: number) {
     }
 
     changePassword(entity: UserChangePasswordDto, req) {

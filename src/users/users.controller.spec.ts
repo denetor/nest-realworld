@@ -30,9 +30,9 @@ describe('UsersController', () => {
         expect(controller.findOneByEmail).toBeDefined();
         expect(controller.findOneByResetPasswordToken).toBeDefined();
         expect(controller.findBySearchText).toBeDefined();
-        expect(controller.insert).toBeDefined();
+        expect(controller.create).toBeDefined();
         expect(controller.changePassword).toBeDefined();
         expect(controller.updateById).toBeDefined();
-        expect(controller.delete).toBeDefined();
+        expect(controller.remove).toBeDefined();
     });
 });
