@@ -17,6 +17,7 @@ export class UserRepositoryMock {
         createdAt: new Date(),
         updatedAt: new Date(),
         lastLoginAt: new Date(),
+        projects: [],
         hashPassword: async () => {}
     };
 

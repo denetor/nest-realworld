@@ -1,28 +1,31 @@
 import {
     Body,
-    Controller, Delete, Get,
-    InternalServerErrorException, NotFoundException, Param,
-    Post, Put,
+    Controller,
+    Delete,
+    Get,
+    InternalServerErrorException,
+    NotFoundException,
+    Param,
+    Post,
+    Put,
     UseGuards,
     UsePipes,
     ValidationPipe
 } from '@nestjs/common';
-import {OrganizationsService} from "../organizations/organizations.service";
-import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import { OrganizationsService } from '../organizations/organizations.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import {
     ApiBearerAuth,
     ApiCreatedResponse,
     ApiInternalServerErrorResponse,
     ApiNotFoundResponse,
-    ApiOkResponse, ApiTags
-} from "@nestjs/swagger";
-import {CreateOrganizationDto} from "../organizations/dto/create-organization.dto";
-import {Organization} from "../organizations/entities/organization.entity";
-import {UpdateOrganizationDto} from "../organizations/dto/update-organization.dto";
-import {ProjectsService} from "./projects.service";
-import {CreateProjectDto} from "./dto/create-project.dto";
-import {Project} from "./entities/project.entity.ts";
-import {UpdateProjectDto} from "./dto/update-project.dto";
+    ApiOkResponse, ApiParam,
+    ApiTags
+} from '@nestjs/swagger';
+import { ProjectsService } from './projects.service';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { Project } from './entities/project.entity.ts';
+import { UpdateProjectDto } from './dto/update-project.dto';
 
 @Controller('projects')
 @ApiTags('projects')
@@ -36,8 +39,9 @@ export class ProjectsController {
     @ApiCreatedResponse()
     @ApiNotFoundResponse()
     @ApiInternalServerErrorResponse()
-    create(@Body() createProjectDto: CreateProjectDto):
-        Promise<Project | InternalServerErrorException | NotFoundException> {
+    create(
+        @Body() createProjectDto: CreateProjectDto
+    ): Promise<Project | InternalServerErrorException | NotFoundException> {
         return this.projectsService.create(createProjectDto);
     }
 
@@ -48,6 +52,18 @@ export class ProjectsController {
     @ApiInternalServerErrorResponse()
     findAll(): Promise<Project[] | InternalServerErrorException> {
         return this.projectsService.findAll();
+    }
+
+    @Get('byuser/:userId')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @ApiParam({name: 'userId', description: 'Projects owner'})
+    @ApiOkResponse()
+    @ApiInternalServerErrorResponse()
+    findAllByUser(
+        @Param('userId') userId: number
+    ): Promise<Project[] | InternalServerErrorException> {
+        return this.projectsService.findAllByUser(+userId);
     }
 
     @Get(':id')
@@ -79,8 +95,9 @@ export class ProjectsController {
     @ApiOkResponse()
     @ApiNotFoundResponse()
     @ApiInternalServerErrorResponse()
-    remove(@Param('id') id: string):
-        Promise<Project | InternalServerErrorException | NotFoundException>{
+    remove(
+        @Param('id') id: string
+    ): Promise<Project | InternalServerErrorException | NotFoundException> {
         return this.projectsService.remove(+id);
     }
 }

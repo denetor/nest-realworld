@@ -1,12 +1,13 @@
 import {
     Column,
     CreateDateColumn,
-    Entity,
+    Entity, ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateProjectDto } from '../dto/create-project.dto';
+import {User} from "../../users/entities/user.entity";
 
 @Entity()
 export class Project {
@@ -44,4 +45,8 @@ export class Project {
         description: 'Record last update date'
     })
     updatedAt: Date;
+
+    // project owner
+    @ManyToOne(() => User, user => user.projects)
+    owner: User;
 }

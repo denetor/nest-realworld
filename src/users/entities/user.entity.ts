@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import {ApiProperty} from '@nestjs/swagger';
 import * as argon2 from 'argon2';
+import {Project} from "../../projects/entities/project.entity.ts";
 
 
 @Entity()
@@ -128,13 +129,17 @@ export class User {
     lastLoginAt: Date;
 
 
-
     // before inserting new entities, hash password
     @BeforeInsert()
     async hashPassword() {
         // this.logger.log('@BeforeInsert User.hashPassword()');
         this.password = await argon2.hash(this.password);
     }
+
+
+    // projects owned by this user
+    @OneToMany(type => Project, project => project.owner)
+    projects: Project[];
 
 
 }

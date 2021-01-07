@@ -1,14 +1,15 @@
 import {
     Injectable,
     InternalServerErrorException,
-    NotFoundException
+    NotFoundException,
+    Logger
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Organization } from '../organizations/entities/organization.entity';
 import { Repository } from 'typeorm';
 import { Project } from './entities/project.entity.ts';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { LoggerEntryContent } from '@nestjs/common/interfaces/external/kafka-options.interface';
 
 @Injectable()
 export class ProjectsService {
@@ -18,7 +19,8 @@ export class ProjectsService {
      */
     constructor(
         @InjectRepository(Project)
-        private readonly entitiesRepository: Repository<Project>
+        private readonly entitiesRepository: Repository<Project>,
+        private readonly logger: Logger
     ) {}
 
     /**
@@ -59,6 +61,26 @@ export class ProjectsService {
 
     /**
      *
+     * @param userId
+     */
+    async findAllByUser(
+        userId: number
+    ): Promise<Project[] | InternalServerErrorException> {
+        this.logger.debug('ProjectsService.findAllByUser()');
+        this.logger.debug({userId});
+        const entities = await this.entitiesRepository
+            .createQueryBuilder('project')
+            .where('project.ownerId = :userId', { userId })
+            .getMany();
+        if (entities || Array.isArray(entities)) {
+            return entities;
+        } else {
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
+     *
      * @param id
      */
     async findOne(id: number): Promise<Project | NotFoundException> {
@@ -78,9 +100,7 @@ export class ProjectsService {
     async update(
         id: number,
         updateProjectDto: UpdateProjectDto
-    ): Promise<
-        Organization | InternalServerErrorException | NotFoundException
-    > {
+    ): Promise<Project | InternalServerErrorException | NotFoundException> {
         const entity = await this.entitiesRepository.findOne(id);
         if (entity && updateProjectDto) {
             entity.name = updateProjectDto.name || entity.name || '';
