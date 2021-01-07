@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { TeamsModule } from './teams/teams.module';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
   imports: [
@@ -24,9 +25,10 @@ import { TeamsModule } from './teams/teams.module';
           logging: ['error'],
       }),
       AuthModule,
-      UsersModule,
       OrganizationsModule,
+      ProjectsModule,
       TeamsModule,
+      UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

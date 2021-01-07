@@ -13,6 +13,7 @@ async function bootstrap() {
         .addTag('audit-logs')
         .addTag('auth')
         .addTag('organizations')
+        .addTag('projects')
         .addTag('teams')
         .addTag('users')
         .build();
