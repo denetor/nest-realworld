@@ -3,9 +3,7 @@ import { UsersService } from './users.service';
 import { UserRepositoryMock } from './mocks/user-repository.mock';
 import { Logger } from '../mocks/logger.mock';
 import { User } from './entities/user.entity';
-import { Organization } from '../organizations/entities/organization.entity';
 import { UserDto } from './dto/user-dto';
-import { sample } from 'rxjs/operators';
 import {UserChangePasswordDto} from "./dto/user-change-password-dto";
 
 describe('UsersService', () => {

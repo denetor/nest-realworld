@@ -1,7 +1,7 @@
-import { ProjectEntity.Ts } from './project.entity.ts';
+import { Project } from './project.entity';
 
-describe('ProjectEntity.Ts', () => {
+describe('Project', () => {
   it('should be defined', () => {
-    expect(new ProjectEntity.Ts()).toBeDefined();
+    expect(new Project(null)).toBeDefined();
   });
 });

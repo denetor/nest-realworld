@@ -8,29 +8,37 @@ import {
     Param,
     Post,
     Put,
+    Req,
+    UnauthorizedException,
     UseGuards,
     UsePipes,
     ValidationPipe
 } from '@nestjs/common';
-import { OrganizationsService } from '../organizations/organizations.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import {
     ApiBearerAuth,
     ApiCreatedResponse,
     ApiInternalServerErrorResponse,
     ApiNotFoundResponse,
-    ApiOkResponse, ApiParam,
-    ApiTags
+    ApiOkResponse,
+    ApiParam,
+    ApiTags,
+    ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { Project } from './entities/project.entity.ts';
+import { Project } from './entities/project.entity';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory';
+import { Action } from '../casl/ability.action';
 
 @Controller('projects')
 @ApiTags('projects')
 export class ProjectsController {
-    constructor(private readonly projectsService: ProjectsService) {}
+    constructor(
+        private readonly projectsService: ProjectsService,
+        private readonly caslAbilityFactory: CaslAbilityFactory
+    ) {}
 
     @Post()
     @UseGuards(JwtAuthGuard)
@@ -39,10 +47,21 @@ export class ProjectsController {
     @ApiCreatedResponse()
     @ApiNotFoundResponse()
     @ApiInternalServerErrorResponse()
+    @ApiUnauthorizedResponse({ description: 'user not authorized' })
     create(
-        @Body() createProjectDto: CreateProjectDto
+        @Body() createProjectDto: CreateProjectDto,
+        @Req() req: Request | any
     ): Promise<Project | InternalServerErrorException | NotFoundException> {
-        return this.projectsService.create(createProjectDto);
+        if (req && req.user) {
+            const ability = this.caslAbilityFactory.createForUser(req.user);
+            if (ability.can(Action.Create, Project)) {
+                return this.projectsService.create(createProjectDto);
+            } else {
+                throw new UnauthorizedException();
+            }
+        } else {
+            throw new UnauthorizedException();
+        }
     }
 
     @Get()
@@ -57,7 +76,7 @@ export class ProjectsController {
     @Get('byuser/:userId')
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
-    @ApiParam({name: 'userId', description: 'Projects owner'})
+    @ApiParam({ name: 'userId', description: 'Projects owner' })
     @ApiOkResponse()
     @ApiInternalServerErrorResponse()
     findAllByUser(
