@@ -33,13 +33,11 @@ export class AuthService {
                 return result;
             } else {
                 this.logger.debug('Password not matched');
-                // throw new UnauthorizedException('Bad username or password');
-                return null;
+                throw new UnauthorizedException('Bad username or password');
             }
         } else {
             this.logger.debug('User not found: ' + email);
-            // throw new UnauthorizedException('Bad username or password');
-            return null;
+            throw new UnauthorizedException('Bad username or password');
         }
     }
 

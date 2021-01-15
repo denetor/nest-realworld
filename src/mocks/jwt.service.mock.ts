@@ -1,5 +1,5 @@
 export class JwtServiceMock {
-    sign(): string {
+    sign = (): string => {
         return 'a signed token';
-    };
+    }
 }

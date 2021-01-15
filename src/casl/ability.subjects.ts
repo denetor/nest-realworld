@@ -1,4 +1,4 @@
-import { Project } from '../projects/entities/project.entity.ts';
+import { Project } from '../projects/entities/project.entity';
 import { Organization } from '../organizations/entities/organization.entity';
 import { Team } from '../teams/entities/team.entity';
 import { User } from '../users/entities/user.entity';

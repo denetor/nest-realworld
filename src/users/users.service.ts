@@ -26,7 +26,7 @@ export class UsersService {
 
     async findAll(): Promise<User[] | InternalServerErrorException> {
         const entities = await this.entitiesRepository.find();
-        if (entities || Array.isArray(entities)) {
+        if (entities && Array.isArray(entities)) {
             return entities;
         } else {
             throw new InternalServerErrorException();
@@ -412,7 +412,7 @@ export class UsersService {
      *
      * @param email
      */
-    static obfuscateEmail(email: string) {
+    static obfuscateEmail(email: string): string {
         let ret = '';
         const pieces = email.split('@');
         // obfuscate username
@@ -434,7 +434,7 @@ export class UsersService {
         return ret;
     }
 
-    static obfuscateString(s: string) {
+    static obfuscateString(s: string): string {
         let ret = '';
         if (s && s.length > 0) {
             ret += s[0] + '...';

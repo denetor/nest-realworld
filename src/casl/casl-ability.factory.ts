@@ -3,7 +3,7 @@ import { Action } from './ability.action';
 import { AbilitySubjects } from './ability.subjects';
 import { Injectable } from '@nestjs/common';
 import { User } from '../users/entities/user.entity';
-import { Project } from '../projects/entities/project.entity.ts';
+import { Project } from '../projects/entities/project.entity';
 
 export type AppAbility = Ability<[Action, AbilitySubjects]>;
 
