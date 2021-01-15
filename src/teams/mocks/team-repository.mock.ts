@@ -13,19 +13,27 @@ export class TeamRepositoryMock {
         return this.sampleEntity;
     }
 
-    async findAll(): Promise<Team[]> {
-        return [this.sampleEntity];
+    async find(): Promise<Team[]> {
+        return new Promise((resolve, reject) => {
+            resolve([this.sampleEntity]);
+        });
     }
 
     async insert(entity: Team): Promise<any> {
-        return { identifiers: [1] };
+        return new Promise((resolve, reject) => {
+            resolve({ identifiers: [1] });
+        });
     }
 
     async update(id: number, dto: UpdateTeamDto): Promise<Team> {
-        return this.sampleEntity;
+        return new Promise((resolve, reject) => {
+            resolve(this.sampleEntity);
+        });
     }
 
     async delete(id: number): Promise<Team> {
-        return this.sampleEntity;
+        return new Promise((resolve, reject) => {
+            resolve(this.sampleEntity);
+        });
     }
 }

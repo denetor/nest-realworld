@@ -9,10 +9,8 @@ import { CreateTeamDto } from '../dto/create-team.dto';
 
 @Entity()
 export class Team {
-    constructor(dto: CreateTeamDto | undefined) {
-        if (dto) {
-            this.name = dto.name || '';
-        }
+    constructor(dto: CreateTeamDto | undefined | null) {
+        this.name = dto && dto.name ? dto.name : '';
     }
 
     @PrimaryGeneratedColumn()

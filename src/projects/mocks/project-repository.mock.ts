@@ -14,19 +14,33 @@ export class ProjectRepositoryMock {
         return this.sampleEntity;
     }
 
+    async find(): Promise<Project[]> {
+        return new Promise((resolve, reject) => {
+            resolve([this.sampleEntity]);
+        });
+    }
+
     async findAll(): Promise<Project[]> {
-        return [this.sampleEntity];
+        return new Promise((resolve, reject) => {
+            resolve([this.sampleEntity]);
+        });
     }
 
     async insert(entity: Project): Promise<any> {
-        return { identifiers: [1] };
+        return new Promise((resolve, reject) => {
+            resolve({ identifiers: [1] });
+        });
     }
 
     async update(id: number, dto: UpdateProjectDto): Promise<Project> {
-        return this.sampleEntity;
+        return new Promise((resolve, reject) => {
+            resolve(this.sampleEntity);
+        });
     }
 
     async delete(id: number): Promise<Project> {
-        return this.sampleEntity;
+        return new Promise((resolve, reject) => {
+            resolve(this.sampleEntity);
+        });
     }
 }

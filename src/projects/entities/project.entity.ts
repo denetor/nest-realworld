@@ -1,20 +1,19 @@
 import {
     Column,
     CreateDateColumn,
-    Entity, ManyToOne,
+    Entity,
+    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateProjectDto } from '../dto/create-project.dto';
-import {User} from "../../users/entities/user.entity";
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Project {
     constructor(dto: CreateProjectDto | undefined) {
-        if (dto) {
-            this.name = dto.name || '';
-        }
+        this.name = dto && dto.name ? dto.name : '';
     }
 
     @PrimaryGeneratedColumn()
@@ -47,6 +46,9 @@ export class Project {
     updatedAt: Date;
 
     // project owner
-    @ManyToOne(() => User, user => user.projects)
+    @ManyToOne(
+        () => User,
+        user => user.projects
+    )
     owner: User;
 }

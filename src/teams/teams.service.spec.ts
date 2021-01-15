@@ -33,16 +33,18 @@ describe('TeamsService', () => {
         expect(service.remove).toBeDefined();
     });
 
-    it('findOne() should return an entity', () => {
-        service.findOne(1).then(entity => {
-            expect(typeof entity).toBe('Team');
-        });
+    it('findOne() should return an entity', async () => {
+        const entity = await service.findOne(1);
+        expect(entity.name).toBeDefined();
+        expect(entity.name).toBe('Drink team');
     });
 
-    it('findAll() should return an array', () => {
-        service.findAll().then(entities => {
-            expect(typeof entities).toBe('Array');
-        });
+    it('findAll() should return an array', async () => {
+        const entities = await service.findAll();
+        expect(entities).toBeDefined();
+        expect(entities[0]).toBeDefined();
+        expect(entities[0].id).toBeDefined();
+        expect(entities[0].id).toBe(1);
     });
 
     it('create() should return an entity', () => {
