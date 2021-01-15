@@ -12,7 +12,7 @@ import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Project {
-    constructor(dto: CreateProjectDto | undefined) {
+    constructor(dto: CreateProjectDto | undefined | null) {
         this.name = dto && dto.name ? dto.name : '';
     }
 

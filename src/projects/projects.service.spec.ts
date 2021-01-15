@@ -54,7 +54,7 @@ describe('ProjectsService', () => {
     it('create() should return an entity', () => {
         const dto = new Project({ name: 'Project Manhattan' });
         const instance = service.create(dto).then(entity => {
-            expect(typeof instance).toBe('Team');
+            expect(typeof instance).toBe('Project');
         });
     });
 
