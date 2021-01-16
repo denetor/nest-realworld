@@ -9,6 +9,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
 import { TeamsModule } from './teams/teams.module';
 import { ProjectsModule } from './projects/projects.module';
 import { CaslModule } from './casl/casl.module';
+import { OwlsModule } from './owls/owls.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CaslModule } from './casl/casl.module';
       TeamsModule,
       UsersModule,
       CaslModule,
+      OwlsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
