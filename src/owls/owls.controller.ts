@@ -1,4 +1,4 @@
-import {Controller, Get} from '@nestjs/common';
+import {Controller, Get, Res} from '@nestjs/common';
 import {ApiTags} from "@nestjs/swagger";
 import {OwlsService} from "./owls.service";
 
@@ -12,7 +12,14 @@ export class OwlsController {
 
 
     @Get('test.svg')
-    testSvg() {
-        return this.owlsService.test();
+    testSvg(
+        @Res() res,
+    ) {
+        if (!res.headers) {
+            res.headers = {};
+        }
+        res.headers['Content-Type'] = 'image/svg+xml';
+        res.headers['Content-Disposition'] = 'attachment; filename=test.svg';
+        res.end(this.owlsService.test());
     }
 }
