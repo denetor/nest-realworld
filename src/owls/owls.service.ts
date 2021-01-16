@@ -15,11 +15,33 @@ export class OwlsService {
             .attr('width', 100)
             .attr('height', 100)
             .attr('xmlns', 'http://www.w3.org/2000/svg');
-        svg.append('rect')
-            .attr('x', 10)
-            .attr('y', 10)
-            .attr('width', 80)
-            .attr('height', 80)
+        // corpo
+        svg.append('circle')
+            .attr('cx', 50)
+            .attr('cy', 50)
+            .attr('r', 45)
+            .style('fill', 'brown');
+        // occhi
+        svg.append('circle')
+            .attr('cx', 50 - 18)
+            .attr('cy', 30)
+            .attr('r', 16)
+            .style('fill', 'yellow');
+        svg.append('circle')
+            .attr('cx', 50 + 18)
+            .attr('cy', 30)
+            .attr('r', 16)
+            .style('fill', 'yellow');
+        // becco
+        const becco = d3
+            .symbol()
+            .type(d3.symbolTriangle)
+            .size(100);
+        svg.append('path')
+            .attr('d', becco)
+            .attr('transform', function(d) {
+                return 'translate(50,50),rotate(180,0,0)';
+            })
             .style('fill', 'orange');
 
         return body.html();
