@@ -19,7 +19,7 @@ export class TeamRepositoryMock {
         });
     }
 
-    async insert(entity: Team): Promise<any> {
+    async insert(entity: Team): Promise<unknown> {
         return new Promise((resolve, reject) => {
             resolve({ identifiers: [1] });
         });
@@ -31,9 +31,9 @@ export class TeamRepositoryMock {
         });
     }
 
-    async delete(id: number): Promise<Team> {
+    async delete(id: number): Promise<unknown> {
         return new Promise((resolve, reject) => {
-            resolve(this.sampleEntity);
+            resolve({affected: 1});
         });
     }
 }

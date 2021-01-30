@@ -201,13 +201,13 @@ export class UsersService {
     async remove(
         id: number
     ): Promise<User | InternalServerErrorException | NotFoundException> {
-        this.logger.debug('UsersService.delete()');
-        this.logger.debug({ id });
+        // this.logger.debug('UsersService.delete()');
+        // this.logger.debug({ id });
         const entity = await this.entitiesRepository.findOne(id);
         if (entity) {
             const result = await this.entitiesRepository.delete(id);
             if (result && result.affected) {
-                this.logger.debug({ result });
+                // this.logger.debug({ result });
                 return entity;
             } else {
                 throw new InternalServerErrorException({

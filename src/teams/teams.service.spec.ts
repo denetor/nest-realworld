@@ -3,6 +3,7 @@ import { TeamsService } from './teams.service';
 import { TeamRepositoryMock } from './mocks/team-repository.mock';
 import { Team } from './entities/team.entity';
 import { UpdateTeamDto } from './dto/update-team.dto';
+import {Logger} from "../mocks/logger.mock";
 
 describe('TeamsService', () => {
     let service: TeamsService;
@@ -14,7 +15,8 @@ describe('TeamsService', () => {
                 {
                     provide: 'TeamRepository',
                     useClass: TeamRepositoryMock
-                }
+                },
+                Logger
             ]
         }).compile();
 
@@ -47,23 +49,25 @@ describe('TeamsService', () => {
         expect(entities[0].id).toBe(1);
     });
 
-    it('create() should return an entity', () => {
+    it('create() should return an entity', async () => {
         const dto = new Team({ name: 'A Team' });
-        const instance = service.create(dto).then(entity => {
-            expect(typeof instance).toBe('Team');
-        });
+        const instance = await service.create(dto);
+        expect(instance).toBeDefined();
+        expect(instance.name).toBeDefined();
+        expect(instance.name).toBe('Drink team');
     });
 
-    it('update() should return an entity', () => {
+    it('update() should return an entity', async () => {
         const dto: UpdateTeamDto = { name: 'A Team' };
-        service.update(1, dto).then(entity => {
-            expect(typeof entity).toBe('Team');
-        });
+        const instance = await service.update(1, dto);
+        expect(instance).toBeDefined();
+        expect(instance.name).toBeDefined();
     });
 
-    it('remove() should return an entity', () => {
-        service.remove(1).then(entity => {
-            expect(typeof entity).toBe('Team');
-        });
+    it('remove() should return an entity', async() => {
+        const result = await service.remove(1);
+        const instance = await service.remove(1);
+        expect(instance).toBeDefined();
+        expect(instance.name).toBeDefined();
     });
 });

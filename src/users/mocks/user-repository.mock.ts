@@ -70,7 +70,7 @@ export class UserRepositoryMock {
         });
     }
 
-    async delete(id: number): Promise<any> {
+    async delete(id: number): Promise<unknown> {
         return new Promise((resolve, reject) => {
             resolve({affected: 1});
         });

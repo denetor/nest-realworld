@@ -1,6 +1,6 @@
 import {
     Injectable,
-    InternalServerErrorException,
+    InternalServerErrorException, Logger,
     NotFoundException
 } from '@nestjs/common';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -13,7 +13,8 @@ import { Team } from './entities/team.entity';
 export class TeamsService {
     constructor(
         @InjectRepository(Team)
-        private readonly entitiesRepository: Repository<Team>
+        private readonly entitiesRepository: Repository<Team>,
+        private readonly logger: Logger
     ) {}
 
     async create(
@@ -77,7 +78,7 @@ export class TeamsService {
         }
     }
 
-    async remove(id: number): Promise<Team | NotFoundException> {
+    async remove(id: number): Promise<Team | InternalServerErrorException | NotFoundException> {
         const entity = await this.entitiesRepository.findOne(id);
         if (entity) {
             const result = await this.entitiesRepository.delete(id);
