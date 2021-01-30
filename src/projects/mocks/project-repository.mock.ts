@@ -26,7 +26,7 @@ export class ProjectRepositoryMock {
         });
     }
 
-    async insert(entity: Project): Promise<any> {
+    async insert(entity: Project): Promise<unknown> {
         return new Promise((resolve, reject) => {
             resolve({ identifiers: [1] });
         });
@@ -38,9 +38,9 @@ export class ProjectRepositoryMock {
         });
     }
 
-    async delete(id: number): Promise<Project> {
+    async delete(id: number): Promise<unknown> {
         return new Promise((resolve, reject) => {
-            resolve(this.sampleEntity);
+            resolve({affected: 1});
         });
     }
 }

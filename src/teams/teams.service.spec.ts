@@ -65,7 +65,6 @@ describe('TeamsService', () => {
     });
 
     it('remove() should return an entity', async() => {
-        const result = await service.remove(1);
         const instance = await service.remove(1);
         expect(instance).toBeDefined();
         expect(instance.name).toBeDefined();
