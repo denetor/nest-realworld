@@ -47,23 +47,24 @@ describe('OrganizationsService', () => {
         expect(entities[0].id).toBe(1);
     });
 
-    it('create() should return an entity', () => {
+    it('create() should return an entity', async () => {
         const dto = new Organization({ name: 'Macrosoft' });
-        const instance = service.create(dto).then(entity => {
-            expect(typeof instance).toBe('Organization');
-        });
+        const instance = await service.create(dto);
+        expect(instance).toBeDefined();
+        expect(instance.name).toBeDefined();
+        expect(instance.name).toBe('ACME inc.');
     });
 
-    it('update() should return an entity', () => {
+    it('update() should return an entity', async () => {
         const dto: UpdateOrganizationDto = { name: 'Macrosoft' };
-        service.update(1, dto).then(entity => {
-            expect(typeof entity).toBe('Organization');
-        });
+        const instance = await service.update(1, dto);
+        expect(instance).toBeDefined();
+        expect(instance.name).toBeDefined();
     });
 
-    it('remove() should return an entity', () => {
-        service.remove(1).then(entity => {
-            expect(typeof entity).toBe('Organization');
-        });
+    it('remove() should return an entity', async () => {
+        const instance = await service.remove(1);
+        expect(instance).toBeDefined();
+        expect(instance.name).toBeDefined();
     });
 });

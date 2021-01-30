@@ -25,7 +25,7 @@ export class OrganizationRepositoryMock {
         });
     }
 
-    async insert(entity: Organization): Promise<any> {
+    async insert(entity: Organization): Promise<unknown> {
         return new Promise((resolve, reject) => {
             resolve({ identifiers: [1] });
         });
@@ -40,9 +40,9 @@ export class OrganizationRepositoryMock {
         });
     }
 
-    async delete(id: number): Promise<Organization> {
+    async delete(id: number): Promise<unknown> {
         return new Promise((resolve, reject) => {
-            resolve(this.sampleEntity);
+            resolve({affected: 1});
         });
     }
 }
