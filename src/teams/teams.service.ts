@@ -11,10 +11,11 @@ import { Team } from './entities/team.entity';
 
 @Injectable()
 export class TeamsService {
+    private logger = new Logger(TeamsService.name);
+
     constructor(
         @InjectRepository(Team)
-        private readonly entitiesRepository: Repository<Team>,
-        private readonly logger: Logger
+        private readonly entitiesRepository: Repository<Team>
     ) {}
 
     async create(

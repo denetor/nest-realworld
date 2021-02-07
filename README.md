@@ -12,10 +12,13 @@ Access rights can be set to single users, organizations or teams.
 - [x] Fix all controllers response codes
 - [x] Unit Tests (https://stackoverflow.com/questions/55366037/inject-typeorm-repository-into-nestjs-service-for-mock-data-testing)
 - [x] Replace usersService.insert/delete with create/remove
-- [x] Access control (basic)
-- [ ] Project entity, with access control
+- [x] Access control (basic) with CASL
+- [x] Project entity
+- [x] REST API Audit
 - [ ] REST API Audit (with configuration)
+- [ ] Replace injected logger service and user simple imported instance
 - [ ] Data access Audit (with configuration)
 - [ ] Add email notifications on account creation/password recovery/... (with configurable sending service)
 - [ ] Add password expiring (with configuration)
 - [ ] E2e tests with dedicated DB and seed
+- [ ] Better access control (with CASL?)
