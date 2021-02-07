@@ -16,10 +16,11 @@ import * as argon2 from 'argon2';
 
 @Injectable()
 export class UsersService {
+    private logger = new Logger(UsersService.name);
+
     constructor(
         @InjectRepository(User)
         private readonly entitiesRepository: Repository<User>,
-        private readonly logger: Logger
     ) // private appRolesRepository: Repository<AppRole>,
     // private mailerService: MailerService,
     {}

@@ -1,6 +1,6 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import { JwtService, JwtModule } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { LocalStrategy } from './local.strategy';
@@ -12,7 +12,6 @@ import { User } from '../users/entities/user.entity';
 
 @Module({
     imports: [
-        Logger,
         UsersModule,
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.register({
@@ -21,7 +20,7 @@ import { User } from '../users/entities/user.entity';
         }),
         TypeOrmModule.forFeature([User]),
     ],
-    providers: [AuthService, LocalStrategy, JwtStrategy, Logger],
+    providers: [AuthService, LocalStrategy, JwtStrategy],
     controllers: [AuthController],
 })
 export class AuthModule {}

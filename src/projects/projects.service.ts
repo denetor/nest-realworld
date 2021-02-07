@@ -12,6 +12,8 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 
 @Injectable()
 export class ProjectsService {
+    private logger = new Logger(ProjectsService.name);
+
     /**
      *
      * @param entitiesRepository
@@ -19,7 +21,6 @@ export class ProjectsService {
     constructor(
         @InjectRepository(Project)
         private readonly entitiesRepository: Repository<Project>,
-        private readonly logger: Logger
     ) {}
 
     /**

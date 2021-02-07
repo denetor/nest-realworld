@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UserRepositoryMock } from '../users/mocks/user-repository.mock';
-import { Logger } from '../mocks/logger.mock';
 import { JwtServiceMock } from '../mocks/jwt.service.mock';
 import { UsersServiceMock } from '../users/mocks/users.service.mock';
 
@@ -23,8 +22,7 @@ describe('AuthService', () => {
                 {
                     provide: 'JwtService',
                     useClass: JwtServiceMock
-                },
-                Logger
+                }
             ]
         }).compile();
 

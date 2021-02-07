@@ -1,17 +1,16 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, Logger } from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import { config } from '../common/config/config';
 import { UsersService } from '../users/users.service';
 
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-
+    private logger = new Logger(JwtStrategy.name);
 
     constructor(
         private readonly usersService: UsersService,
-        private readonly logger: Logger,
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

@@ -15,8 +15,8 @@ Access rights can be set to single users, organizations or teams.
 - [x] Access control (basic) with CASL
 - [x] Project entity
 - [x] REST API Audit
+- [x] Replace injected logger service and user simple imported instance
 - [ ] REST API Audit (with configuration)
-- [ ] Replace injected logger service and user simple imported instance
 - [ ] Data access Audit (with configuration)
 - [ ] Add email notifications on account creation/password recovery/... (with configurable sending service)
 - [ ] Add password expiring (with configuration)

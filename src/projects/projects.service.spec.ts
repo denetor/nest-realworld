@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectsService } from './projects.service';
 import { ProjectRepositoryMock } from './mocks/project-repository.mock';
-import { Logger } from '../mocks/logger.mock';
 import { Project } from './entities/project.entity';
 import { UpdateProjectDto } from './dto/update-project.dto';
 
@@ -16,7 +15,6 @@ describe('ProjectsService', () => {
                     provide: 'ProjectRepository',
                     useClass: ProjectRepositoryMock
                 },
-                Logger
             ]
         }).compile();
 

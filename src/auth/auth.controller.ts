@@ -7,11 +7,11 @@ import { UserLoginDto } from '../users/dto/user-login-dto';
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
+    private logger = new Logger(AuthController.name);
 
 
     constructor(
         private readonly authService: AuthService,
-        private readonly logger: Logger,
     ) {}
 
 

@@ -1,10 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { UserRepositoryMock } from './mocks/user-repository.mock';
-import { Logger } from '../mocks/logger.mock';
-import { User } from './entities/user.entity';
 import { UserDto } from './dto/user-dto';
-import {UserChangePasswordDto} from "./dto/user-change-password-dto";
+import { UserChangePasswordDto } from './dto/user-change-password-dto';
 
 describe('UsersService', () => {
     let service: UsersService;
@@ -26,8 +24,7 @@ describe('UsersService', () => {
                 {
                     provide: 'UserRepository',
                     useClass: UserRepositoryMock
-                },
-                Logger
+                }
             ]
         }).compile();
 
@@ -92,7 +89,7 @@ describe('UsersService', () => {
 
     it('findOneByResetPasswordToken() should return an entity', async () => {
         const entity = await service.findOneByResetPasswordToken('mytoken');
-        expect(entity).toEqual({id: 1, email: 'j...n@e...e.com'});
+        expect(entity).toEqual({ id: 1, email: 'j...n@e...e.com' });
     });
 
     it('findBySearchText(ab) should return an entities array', async () => {
@@ -156,9 +153,9 @@ describe('UsersService', () => {
         expect.assertions(4);
         const dto: UserChangePasswordDto = {
             oldPassword: 'a password',
-            newPassword: 'another password',
+            newPassword: 'another password'
         };
-        let req: any = {user: {}};
+        let req: any = { user: {} };
         try {
             const entity = await service.changePassword(dto, req);
         } catch (e) {
@@ -178,9 +175,9 @@ describe('UsersService', () => {
         expect.assertions(4);
         let dto: UserChangePasswordDto = {
             oldPassword: 'a password',
-            newPassword: '',
+            newPassword: ''
         };
-        const req: any = {user: {id: 1}};
+        const req: any = { user: { id: 1 } };
         try {
             const entity = await service.changePassword(dto, req);
         } catch (e) {
@@ -189,7 +186,7 @@ describe('UsersService', () => {
         }
         dto = {
             oldPassword: '',
-            newPassword: 'another password',
+            newPassword: 'another password'
         };
         try {
             const entity = await service.changePassword(dto, req);
@@ -211,9 +208,15 @@ describe('UsersService', () => {
     // });
 
     it('obfuscateEmail() should work properly', () => {
-        expect(UsersService.obfuscateEmail('johndoe@example.com')).toBe('j...e@e...e.com');
-        expect(UsersService.obfuscateEmail('john.doe@example.com')).toBe('j...e@e...e.com');
-        expect(UsersService.obfuscateEmail('john.doe@finance.example.com')).toBe('j...e@f...e.com');
+        expect(UsersService.obfuscateEmail('johndoe@example.com')).toBe(
+            'j...e@e...e.com'
+        );
+        expect(UsersService.obfuscateEmail('john.doe@example.com')).toBe(
+            'j...e@e...e.com'
+        );
+        expect(
+            UsersService.obfuscateEmail('john.doe@finance.example.com')
+        ).toBe('j...e@f...e.com');
     });
 
     it('obfuscateString() should work properly', () => {

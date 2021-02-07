@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
+    private logger = new Logger(AuthService.name);
 
 
     constructor(
@@ -15,7 +16,6 @@ export class AuthService {
         private entitiesRepository: Repository<User>,
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
-        private readonly logger: Logger,
     ) {}
 
 
