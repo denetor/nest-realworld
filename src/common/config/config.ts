@@ -1,4 +1,4 @@
-import {parameters} from "./parameters";
+import { parameters } from './parameters';
 
 export const config = {
     app: {
@@ -8,10 +8,15 @@ export const config = {
         // this app features
         features: {
             // put here application features configuration
+            auditLog: {
+                enable: true, // enable/disable logging system
+                excludeEntities: ['someentity'], // entities excluded from auditing
+                excludeOperations: ['read'] // operations excluded from auditing
+            }
         },
         services: {
             // put here external services configuration
-        },
+        }
     },
-    params: parameters,
+    params: parameters
 };
