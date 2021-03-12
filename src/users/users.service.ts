@@ -38,15 +38,15 @@ export class UsersService {
         if (req && req.user && req.user.id) {
             return this.entitiesRepository
                 .createQueryBuilder('user')
-                .leftJoinAndSelect(
-                    'user.userToOrganizations',
-                    'userToOrganizations'
-                )
-                .leftJoinAndSelect(
-                    'userToOrganizations.organization',
-                    'organization'
-                )
-                .leftJoinAndSelect('userToOrganizations.role', 'role')
+                // .leftJoinAndSelect(
+                //     'user.userToOrganizations',
+                //     'userToOrganizations'
+                // )
+                // .leftJoinAndSelect(
+                //     'userToOrganizations.organization',
+                //     'organization'
+                // )
+                // .leftJoinAndSelect('userToOrganizations.role', 'role')
                 .where('user.id = :id', { id: req.user.id })
                 .getOne();
         } else {

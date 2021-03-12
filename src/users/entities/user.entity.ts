@@ -11,6 +11,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import * as argon2 from 'argon2';
 import { Project } from '../../projects/entities/project.entity';
+import {Exclude} from "class-transformer";
 
 @Entity()
 export class User {
@@ -45,6 +46,7 @@ export class User {
     email: string;
 
     @Column({ nullable: true, default: null })
+    @Exclude()
     @ApiProperty({
         type: String,
         description: 'Hashed password'
